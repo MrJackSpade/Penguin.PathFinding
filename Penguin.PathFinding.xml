@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Penguin.PathFinding</name>
+    </assembly>
+    <members>
+        <member name="T:Penguin.PathFinding.Node">
+            <summary>
+            Represents an X/Y coordinate pair
+            </summary>
+        </member>
+        <member name="M:Penguin.PathFinding.Node.#ctor(System.Double,System.Double)">
+            <summary>
+            Constructs a new instance from the given X/Y
+            </summary>
+            <param name="x">The X location</param>
+            <param name="y">The Y location</param>
+        </member>
+        <member name="M:Penguin.PathFinding.Node.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructs a new instance from the given X/Y
+            </summary>
+            <param name="x">The X location</param>
+            <param name="y">The Y location</param>
+        </member>
+        <member name="F:Penguin.PathFinding.Node.X">
+            <summary>
+            The X location
+            </summary>
+        </member>
+        <member name="F:Penguin.PathFinding.Node.Y">
+            <summary>
+            The Y location
+            </summary>
+        </member>
+        <member name="T:Penguin.PathFinding.PathFinder">
+            <summary>
+            A class for finding a path through a 2D array of bools by stepping in true squares
+            </summary>
+        </member>
+        <member name="M:Penguin.PathFinding.PathFinder.#ctor(System.Boolean[0:,0:])">
+            <summary>
+            Constructs a new instance using a defined map
+            </summary>
+            <param name="map">A 2D map of bools where true represents a valid step</param>
+        </member>
+        <member name="M:Penguin.PathFinding.PathFinder.#ctor(System.Collections.Generic.List{Penguin.PathFinding.Node})">
+            <summary>
+            Constructs a new instance using a list of valid locations to step
+            </summary>
+            <param name="validNodes">A list of nodes representing valid locations to step</param>
+        </member>
+        <member name="M:Penguin.PathFinding.PathFinder.GetPath(Penguin.PathFinding.Node,Penguin.PathFinding.Node)">
+            <summary>
+            Gets a path of nodes representing valid steps through the map generated at construction
+            </summary>
+            <param name="start">The start location</param>
+            <param name="end">The intended end location</param>
+            <returns>A list of valid steps, or null if no path is found</returns>
+        </member>
+    </members>
+</doc>
