@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Penguin.PathFinding
 {
@@ -10,10 +11,14 @@ namespace Penguin.PathFinding
     /// </summary>
     public class PathFinder
     {
-
+        static int currentPath = 0;
+        static DateTime StartTime { get; set; } = DateTime.Now;
         private PathFindingNode[,] World { get; set; }
 
         private bool[,] Map { get; set; }
+
+        public const bool GenerateCWorld = false;
+        public char[,] CWorld {get;set;}
 
         /// <summary>
         /// Constructs a new instance using a defined map
@@ -22,6 +27,30 @@ namespace Penguin.PathFinding
         public PathFinder(bool[,] map)
         {
             Map = map;
+
+            if(GenerateCWorld)
+            {
+                ResetWorld();
+                DumpCWorld();
+            }
+        }
+
+        public void DumpCWorld()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int y = 0; y < CWorld.GetLength(0); y++)
+            {
+                for (int x = 0; x < CWorld.GetLength(0); x++)
+                {
+
+                    sb.Append(CWorld[x, y]);
+                }
+                sb.Append(System.Environment.NewLine);
+            }
+
+            string LogPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), $"{StartTime.ToString("yyyyMMdd_HHmmss")}_{++currentPath}.log");
+            Debug.Log(LogPath);
+            System.IO.File.WriteAllText(LogPath, sb.ToString());
         }
 
         /// <summary>
@@ -32,7 +61,7 @@ namespace Penguin.PathFinding
         {
             Map = new bool[(int)validNodes.Max(n => n.X), (int)validNodes.Max(n => n.Y)];
 
-            foreach(Node n in validNodes)
+            foreach (Node n in validNodes)
             {
                 Map[(int)n.X, (int)n.Y] = true;
             }
@@ -41,6 +70,11 @@ namespace Penguin.PathFinding
         private void ResetWorld()
         {
             World = new PathFindingNode[Map.GetLength(0), Map.GetLength(1)];
+
+            if(GenerateCWorld)
+            {
+                CWorld = new char[Map.GetLength(0), Map.GetLength(1)];
+            }
 
             for (int x = 0; x < World.GetLength(0); x++)
             {
@@ -54,6 +88,11 @@ namespace Penguin.PathFinding
                         Y = y,
                         Viable = n
                     };
+
+                    if(GenerateCWorld)
+                    {
+                        CWorld[x, y] = n ? 'O' : 'X';
+                    }
 
                     World[x, y] = p;
                 }
@@ -77,7 +116,22 @@ namespace Penguin.PathFinding
 
             RecursiveCheck(GetNodeByNode(start), GetNodeByNode(end));
 
-            return CleanUp(start);
+            Node[] toReturn = CleanUp(start);
+
+            if(GenerateCWorld)
+            {
+                if (toReturn != null)
+                {
+                    foreach (Node n in toReturn)
+                    {
+                        CWorld[(int)n.X, (int)n.Y] = '#';
+                    }
+                    DumpCWorld();
+                }
+                
+            }
+
+            return toReturn;
         }
 
         private PathFindingNode GetNodeByNode(Node pc)
@@ -174,6 +228,11 @@ namespace Penguin.PathFinding
         private PathFindingNode[] CleanUp(Node pc)
         {
             PathFindingNode startN = World[(int)pc.X, (int)pc.Y];
+
+            if(startN.Steps == 0)
+            {
+                return null;
+            }
 
             PathFindingNode toCheck = startN;
 
