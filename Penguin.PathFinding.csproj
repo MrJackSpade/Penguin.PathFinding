@@ -7,6 +7,7 @@
     <Description>A Horrible pathfinding class that shouldn't be used by anybody</Description>
     <AssemblyName>Penguin.PathFinding</AssemblyName>
     <RootNamespace>Penguin.PathFinding</RootNamespace>
+    <DocumentationFile>Penguin.PathFinding.xml</DocumentationFile>
   </PropertyGroup>
   <Import Project="Penguin.Projects.Shared\Penguin.Projects.Shared.csproj" />
 </Project>
