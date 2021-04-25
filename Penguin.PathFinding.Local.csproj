@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/penguincms/Penguin.PathFinding</PackageProjectUrl>
-    <Version>5.0.1</Version>
+    <Version>5.0.5</Version>
     <Description>A Horrible pathfinding class that shouldn't be used by anybody</Description>
     <AssemblyName>Penguin.PathFinding</AssemblyName>
     <RootNamespace>Penguin.PathFinding</RootNamespace>
