@@ -9,6 +9,16 @@
             Represents an X/Y coordinate pair
             </summary>
         </member>
+        <member name="F:Penguin.PathFinding.Node.X">
+            <summary>
+            The X location
+            </summary>
+        </member>
+        <member name="F:Penguin.PathFinding.Node.Y">
+            <summary>
+            The Y location
+            </summary>
+        </member>
         <member name="M:Penguin.PathFinding.Node.#ctor(System.Double,System.Double)">
             <summary>
             Constructs a new instance from the given X/Y
@@ -22,16 +32,6 @@
             </summary>
             <param name="x">The X location</param>
             <param name="y">The Y location</param>
-        </member>
-        <member name="F:Penguin.PathFinding.Node.X">
-            <summary>
-            The X location
-            </summary>
-        </member>
-        <member name="F:Penguin.PathFinding.Node.Y">
-            <summary>
-            The Y location
-            </summary>
         </member>
         <member name="T:Penguin.PathFinding.PathFinder">
             <summary>
