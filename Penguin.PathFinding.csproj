@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/PenguinCms/Penguin.PathFinding</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/PenguinCMS/Penguin.PathFinding</PackageProjectUrl>
     <Version>5.0.5</Version>
     <Description>A Horrible pathfinding class that shouldn't be used by anybody</Description>
     <AssemblyName>Penguin.PathFinding</AssemblyName>
