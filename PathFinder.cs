@@ -37,7 +37,7 @@ namespace Penguin.PathFinding
         /// Constructs a new instance using a list of valid locations to step
         /// </summary>
         /// <param name="validNodes">A list of nodes representing valid locations to step</param>
-        public PathFinder(List<Node> validNodes)
+        public PathFinder(IList<Node> validNodes)
         {
             if (validNodes is null)
             {

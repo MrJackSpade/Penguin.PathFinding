@@ -44,7 +44,7 @@
             </summary>
             <param name="map">A 2D map of bools where true represents a valid step</param>
         </member>
-        <member name="M:Penguin.PathFinding.PathFinder.#ctor(System.Collections.Generic.List{Penguin.PathFinding.Node})">
+        <member name="M:Penguin.PathFinding.PathFinder.#ctor(System.Collections.Generic.IList{Penguin.PathFinding.Node})">
             <summary>
             Constructs a new instance using a list of valid locations to step
             </summary>
