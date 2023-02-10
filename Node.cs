@@ -22,7 +22,7 @@
         /// <param name="y">The Y location</param>
         public Node(double x, double y)
         {
-            (this.X, this.Y) = (x, y);
+            (X, Y) = (x, y);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@
         /// <param name="y">The Y location</param>
         public Node(int x, int y)
         {
-            (this.X, this.Y) = (x, y);
+            (X, Y) = (x, y);
         }
     }
 }

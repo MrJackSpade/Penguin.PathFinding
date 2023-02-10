@@ -11,8 +11,8 @@ namespace Penguin.PathFinding
     /// </summary>
     public class PathFinder
     {
-        public bool GenerateCWorld { get; set; } = false;
-        private static int currentPath = 0;
+        public bool GenerateCWorld { get; set; }
+        private static int currentPath;
         public char[,] CWorld { get; set; }
         private static DateTime StartTime { get; set; } = DateTime.Now;
         private bool[,] Map { get; set; }
@@ -24,12 +24,12 @@ namespace Penguin.PathFinding
         /// <param name="map">A 2D map of bools where true represents a valid step</param>
         public PathFinder(bool[,] map)
         {
-            this.Map = map;
+            Map = map;
 
-            if (this.GenerateCWorld)
+            if (GenerateCWorld)
             {
-                this.ResetWorld();
-                this.DumpCWorld();
+                ResetWorld();
+                DumpCWorld();
             }
         }
 
@@ -44,24 +44,24 @@ namespace Penguin.PathFinding
                 throw new ArgumentNullException(nameof(validNodes));
             }
 
-            this.Map = new bool[(int)validNodes.Max(n => n.X), (int)validNodes.Max(n => n.Y)];
+            Map = new bool[(int)validNodes.Max(n => n.X), (int)validNodes.Max(n => n.Y)];
 
             foreach (Node n in validNodes)
             {
-                this.Map[(int)n.X, (int)n.Y] = true;
+                Map[(int)n.X, (int)n.Y] = true;
             }
         }
 
         public void DumpCWorld()
         {
-            StringBuilder sb = new StringBuilder();
-            for (int y = 0; y < this.CWorld.GetLength(0); y++)
+            StringBuilder sb = new();
+            for (int y = 0; y < CWorld.GetLength(0); y++)
             {
-                for (int x = 0; x < this.CWorld.GetLength(0); x++)
+                for (int x = 0; x < CWorld.GetLength(0); x++)
                 {
-                    sb.Append(this.CWorld[x, y]);
+                    _ = sb.Append(CWorld[x, y]);
                 }
-                sb.Append(System.Environment.NewLine);
+                _ = sb.Append(System.Environment.NewLine);
             }
 
             string LogPath = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), $"{StartTime:yyyyMMdd_HHmmss}_{++currentPath}.log");
@@ -87,37 +87,40 @@ namespace Penguin.PathFinding
                 throw new ArgumentNullException(nameof(end));
             }
 
-            this.ResetWorld();
+            ResetWorld();
 
-            foreach (PathFindingNode p in this.World)
+            foreach (PathFindingNode p in World)
             {
                 p.Distance = Distance(p, end);
             }
 
-            this.RecursiveCheck(this.GetNodeByNode(start), this.GetNodeByNode(end));
+            _ = RecursiveCheck(GetNodeByNode(start), GetNodeByNode(end));
 
-            Node[] toReturn = this.CleanUp(start);
+            Node[] toReturn = CleanUp(start);
 
-            if (this.GenerateCWorld)
+            if (GenerateCWorld)
             {
                 if (toReturn != null)
                 {
                     foreach (Node n in toReturn)
                     {
-                        this.CWorld[(int)n.X, (int)n.Y] = '#';
+                        CWorld[(int)n.X, (int)n.Y] = '#';
                     }
-                    this.DumpCWorld();
+                    DumpCWorld();
                 }
             }
 
             return toReturn;
         }
 
-        private static double Distance(Node a, Node b) => Math.Sqrt(Math.Pow(Math.Abs(a.X - b.X), 2) + Math.Pow(Math.Abs(a.Y - b.Y), 2));
+        private static double Distance(Node a, Node b)
+        {
+            return Math.Sqrt(Math.Pow(Math.Abs(a.X - b.X), 2) + Math.Pow(Math.Abs(a.Y - b.Y), 2));
+        }
 
         private PathFindingNode[] CleanUp(Node pc)
         {
-            PathFindingNode startN = this.World[(int)pc.X, (int)pc.Y];
+            PathFindingNode startN = World[(int)pc.X, (int)pc.Y];
 
             if (startN.Steps == 0)
             {
@@ -126,14 +129,14 @@ namespace Penguin.PathFinding
 
             PathFindingNode toCheck = startN;
 
-            List<PathFindingNode> toReturn = new List<PathFindingNode>()
+            List<PathFindingNode> toReturn = new()
             {
                 startN
             };
 
             while (toCheck.Steps != 0)
             {
-                toCheck = this.Neighbors(toCheck).Where(p => p.Checked).OrderBy(p => p.Steps).First();
+                toCheck = Neighbors(toCheck).Where(p => p.Checked).OrderBy(p => p.Steps).First();
 
                 toReturn.Add(toCheck);
             }
@@ -144,11 +147,11 @@ namespace Penguin.PathFinding
             {
                 for (; end > 0; end--)
                 {
-                    PathFindingNode[] skip = this.StraightLine(toReturn[start], toReturn[end]);
+                    PathFindingNode[] skip = StraightLine(toReturn[start], toReturn[end]);
 
                     if (skip != null && skip.Length < end - start)
                     {
-                        List<PathFindingNode> newReturn = new List<PathFindingNode>();
+                        List<PathFindingNode> newReturn = new();
 
                         newReturn.AddRange(toReturn.Take(start));
 
@@ -170,11 +173,14 @@ namespace Penguin.PathFinding
 
         private PathFindingNode ClosestNeighborTo(PathFindingNode pc, PathFindingNode target)
         {
-            List<string> vals = this.Neighbors(pc).OrderBy(p => Distance(p, target)).Select(p => $"{p.X}, {p.Y}, ({Distance(p, target)}").ToList();
-            return this.Neighbors(pc).OrderBy(p => Distance(p, target)).FirstOrDefault(p => p.Viable && Distance(p, target) < Distance(pc, target));
+            List<string> vals = Neighbors(pc).OrderBy(p => Distance(p, target)).Select(p => $"{p.X}, {p.Y}, ({Distance(p, target)}").ToList();
+            return Neighbors(pc).OrderBy(p => Distance(p, target)).FirstOrDefault(p => p.Viable && Distance(p, target) < Distance(pc, target));
         }
 
-        private PathFindingNode GetNodeByNode(Node pc) => this.World[(int)pc.X, (int)pc.Y];
+        private PathFindingNode GetNodeByNode(Node pc)
+        {
+            return World[(int)pc.X, (int)pc.Y];
+        }
 
         private IEnumerable<PathFindingNode> Neighbors(Node pc)
         {
@@ -182,7 +188,7 @@ namespace Penguin.PathFinding
             {
                 for (double cy = pc.Y - 1; cy <= pc.Y + 1; cy++)
                 {
-                    if (cx < 0 || cx > this.World.GetLength(0) - 1 || cy < 0 || cy > this.World.GetLength(1) - 1)
+                    if (cx < 0 || cx > World.GetLength(0) - 1 || cy < 0 || cy > World.GetLength(1) - 1)
                     {
                         continue;
                     }
@@ -192,14 +198,14 @@ namespace Penguin.PathFinding
                         continue;
                     }
 
-                    yield return this.World[(int)cx, (int)cy];
+                    yield return World[(int)cx, (int)cy];
                 }
             }
         }
 
         private PathFindingNode[] RecursiveCheck(PathFindingNode pc, PathFindingNode pe, int Length = 0)
         {
-            IEnumerable<PathFindingNode> options = this.Neighbors(pc).Where(p => p.Viable && !p.Checked);
+            IEnumerable<PathFindingNode> options = Neighbors(pc).Where(p => p.Viable && !p.Checked);
 
             PathFindingNode endNode = options.FirstOrDefault(pn => pn == pe);
 
@@ -217,7 +223,7 @@ namespace Penguin.PathFinding
             {
                 px.Checked = true;
 
-                PathFindingNode[] result = this.RecursiveCheck(px, pe, Length + 1);
+                PathFindingNode[] result = RecursiveCheck(px, pe, Length + 1);
 
                 if (result != null)
                 {
@@ -233,19 +239,19 @@ namespace Penguin.PathFinding
 
         private void ResetWorld()
         {
-            this.World = new PathFindingNode[this.Map.GetLength(0), this.Map.GetLength(1)];
+            World = new PathFindingNode[Map.GetLength(0), Map.GetLength(1)];
 
-            if (this.GenerateCWorld)
+            if (GenerateCWorld)
             {
-                this.CWorld = new char[this.Map.GetLength(0), this.Map.GetLength(1)];
+                CWorld = new char[Map.GetLength(0), Map.GetLength(1)];
             }
 
-            for (int x = 0; x < this.World.GetLength(0); x++)
+            for (int x = 0; x < World.GetLength(0); x++)
             {
-                for (int y = 0; y < this.World.GetLength(1); y++)
+                for (int y = 0; y < World.GetLength(1); y++)
                 {
-                    bool n = this.Map[x, y];
-                    PathFindingNode p = new PathFindingNode(x, y)
+                    bool n = Map[x, y];
+                    PathFindingNode p = new(x, y)
                     {
                         Checked = false,
                         X = x,
@@ -253,21 +259,21 @@ namespace Penguin.PathFinding
                         Viable = n
                     };
 
-                    if (this.GenerateCWorld)
+                    if (GenerateCWorld)
                     {
-                        this.CWorld[x, y] = n ? 'O' : 'X';
+                        CWorld[x, y] = n ? 'O' : 'X';
                     }
 
-                    this.World[x, y] = p;
+                    World[x, y] = p;
                 }
             }
         }
 
         private PathFindingNode[] StraightLine(PathFindingNode pc, PathFindingNode target)
         {
-            List<PathFindingNode> toreturn = new List<PathFindingNode>((int)(Math.Abs(pc.X - target.X) + Math.Abs(pc.Y - target.Y))) { pc };
+            List<PathFindingNode> toreturn = new((int)(Math.Abs(pc.X - target.X) + Math.Abs(pc.Y - target.Y))) { pc };
 
-            PathFindingNode next = this.ClosestNeighborTo(pc, target);
+            PathFindingNode next = ClosestNeighborTo(pc, target);
 
             while (next != null)
             {
@@ -278,7 +284,7 @@ namespace Penguin.PathFinding
 
                 toreturn.Add(next);
 
-                next = this.ClosestNeighborTo(next, target);
+                next = ClosestNeighborTo(next, target);
             }
 
             return null;
