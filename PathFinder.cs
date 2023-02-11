@@ -13,9 +13,13 @@ namespace Penguin.PathFinding
     {
         public bool GenerateCWorld { get; set; }
         private static int currentPath;
+
         public char[,] CWorld { get; set; }
+
         private static DateTime StartTime { get; set; } = DateTime.Now;
+
         private bool[,] Map { get; set; }
+
         private PathFindingNode[,] World { get; set; }
 
         /// <summary>
